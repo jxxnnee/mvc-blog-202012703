@@ -25,11 +25,9 @@ import iducs.spring.blog202012703.service.BlogService;
 
 @Controller
 public class BlogController {
-	private String uploadPath;
+	private String IMAGE_PATH = "/Users/ooddymac/mvc-blog-202012703/src/main/webapp/resources/files/";
 	
 	private BlogService blogService;
-
-	private String uploadpath;
 	public BlogController(BlogService blogService) {
 		this.blogService = blogService;
 	}
@@ -56,30 +54,19 @@ public class BlogController {
 	@PostMapping("/blogs")
 	@Transactional
 	public String postBlog( 
-			MultipartHttpServletRequest request,
-//			@RequestParam final String title, 
-//			@RequestParam final String content,
-//			@RequestParam("filepath") MultipartFile file,
-//			@RequestParam final String blogger,
-//			@RequestParam final Timestamp regDateTime,
-			Model model) throws IllegalStateException, IOException {
-		
+			@RequestParam final String title, 
+			@RequestParam final String content,
+			@RequestParam("filepath") MultipartFile file,
+			@RequestParam final String blogger,
+			@RequestParam final Timestamp regDateTime,
+			Model model) throws IllegalStateException, IOException {	
 
 		Blog blog = new Blog();
-		blog.setTitle(request.getParameter("title"));
-		blog.setContent(request.getParameter("content"));
-		blog.setBlogger(request.getParameter("blogger"));
-		blog.setRegDateTime(java.sql.Timestamp.valueOf(request.getParameter("regDateTime")));
-		
-		uploadpath = this.getClass().getResource("/").getPath() + "..\\..\\resources\\files";
-		MultipartFile file = request.getFile("filepath");
-		
-		if (!file.getOriginalFilename().isEmpty()) {
-	         file.transferTo(new File(uploadPath, file.getOriginalFilename()));
-	         blog.setFilepath(file.getOriginalFilename());
-	    } else {
-	        System.out.println("FILE FALIE");
-	    }
+		blog.setTitle(title);
+		blog.setContent(content);
+		blog.setBlogger(blogger);
+		blog.setRegDateTime(regDateTime);	
+		blog = saveImage(blog, file);
 		
 		blogService.postBlog(blog);
 		return "redirect:/blogs/all";
@@ -108,19 +95,35 @@ public class BlogController {
 		blog.setContent(content);
 		blog.setBlogger(blogger);
 		blog.setRegDateTime(regDateTime);
-
-		uploadpath = this.getClass().getResource("/").getPath() + "..\\..\\resources\\files";
-		
-		if (!file.getOriginalFilename().isEmpty()) {
-	         file.transferTo(new File(uploadPath, file.getOriginalFilename()));
-	         blog.setFilepath(file.getOriginalFilename());
-	    } else {
-	        System.out.println("FILE FALIE");
-	    }
+		blog = saveImage(blog, file);
 		
 		blogService.putBlog(blog);
-		
 		return "redirect:/blogs/all";
+	}
+	
+	
+	public Blog saveImage(Blog blog, MultipartFile file) {
+	
+		String safeFile = IMAGE_PATH + file.getOriginalFilename();
+		
+		if (!file.getOriginalFilename().isEmpty()) {
+	         try {
+				file.transferTo(new File(safeFile));
+				 blog.setFilepath(file.getOriginalFilename());
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    } else {
+	        System.out.println("FILE FALIE");
+	        
+	        return blog;
+	    }
+		
+		return blog;
 	}
 	
 	

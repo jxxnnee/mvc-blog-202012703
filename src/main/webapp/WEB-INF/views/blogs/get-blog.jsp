@@ -39,7 +39,8 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <h2 class="section-heading">${blog.title }</h2>
-		  <p>${blog.content }</p>	
+		  <p>${blog.content }</p>
+		  <p>${blog.filepath}</p>	
           <a href="#">
             <img class="img-fluid" src="/files/${blog.filepath}" alt="">
           </a>
