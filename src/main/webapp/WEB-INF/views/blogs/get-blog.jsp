@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 
@@ -10,8 +11,10 @@
 
 </head>
 
-<body>
 
+
+<body>
+	<% request.setCharacterEncoding("utf-8"); %>
   <!-- Navigation -->
   <%@ include file="../main/i-nav.jsp" %>
   
@@ -38,19 +41,20 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <h2 class="section-heading">${blog.title }</h2>
+          <h2 class="section-heading">${blog.title }</h2>       
+		  <c:url value="/files/${blog.filepath}" var="url"/>
 		  <p>${blog.content }</p>
-		  <p>${blog.filepath}</p>	
-          <a href="#">
-            <img class="img-fluid" src="/files/${blog.filepath}" alt="">
-          </a>
+		  <img class="img-fluid" id="image" src="" alt="">
+		  <script>
+			document.getElementById("image").src="/files/${blog.filepath }";
+		  </script>
           <span class="caption text-muted">To go places and do things that have never been done</span>
-          <p> Written ${blog.regDateTime } 
-          Photographs by <a href="#">${blog.blogger }</a>.</p>
+          <p> Written ${blog.regDateTime }</p>
+          <p>Photographs by <a href="#">${blog.blogger }</a>.</p>
           <div class="clearfix">
 	         <a class="btn btn-primary float-right" href="edit/${blog.id }">수정 &rarr;</a>
 	         
-	         <a class="btn btn-primary float-right" href="./blogs-delete?id=${blog.id }">삭제 &rarr;</a>
+	         <a class="btn btn-primary float-right" href="delete/${blog.id }">삭제 &rarr;</a>
 	       </div>
         </div>
       </div>

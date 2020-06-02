@@ -46,7 +46,7 @@ public class BlogRepositoryImpl implements BlogRepository {
 		Map<String, Integer> params = Collections.singletonMap("id", (int) blog.getId());
 //		List<Blog> blogList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Blog>(Blog.class));
 		Blog alog = jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<Blog>(Blog.class));
-		System.out.println(alog);
+		System.out.println(alog.getFilepath());
 		
 		return alog;
 	}

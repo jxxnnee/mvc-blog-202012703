@@ -14,5 +14,5 @@ public interface BlogService {
 
 	int postBlog(Blog blog);
 	void putBlog(Blog blog);
-	void deleteBlog(long id);
+	int deleteBlog(long id);
 }

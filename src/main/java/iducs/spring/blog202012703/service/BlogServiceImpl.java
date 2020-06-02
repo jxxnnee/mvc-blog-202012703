@@ -59,8 +59,12 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public void deleteBlog(long id) {
+	public int deleteBlog(long id) {
 		// TODO Auto-generated method stub
+		Blog blog = new Blog();
+		blog.setId(id);
+		int rows = blogRepository.delete(blog);
 		
+		return rows;
 	}
 }

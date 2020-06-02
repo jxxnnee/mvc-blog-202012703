@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -20,12 +23,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import iducs.spring.blog202012703.HomeController;
 import iducs.spring.blog202012703.domain.Blog;
 import iducs.spring.blog202012703.service.BlogService;
 
 @Controller
 public class BlogController {
 	private String IMAGE_PATH = "/Users/ooddymac/mvc-blog-202012703/src/main/webapp/resources/files/";
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	private BlogService blogService;
 	public BlogController(BlogService blogService) {
@@ -33,7 +38,8 @@ public class BlogController {
 	}
 	
 	@GetMapping("/blogs/all")
-	public String getBlogs(Model model) {
+	public String getBlogs(Model model, Locale locale) {
+		logger.info("GET BLOG LIST! The client locale is {}.", locale);
 		List<Blog> blogList = blogService.getBlogs();
 		model.addAttribute("blogList", blogList);
 		return "/blogs/get-blogs";
@@ -41,7 +47,8 @@ public class BlogController {
 
 	@GetMapping("/blogs/{id}")
 	public String getBlog(@PathVariable("id") Long id,
-			Model model) {
+			Model model, Locale locale) {
+		logger.info("GET BLOG INFO! The client locale is {}.", locale);
 		model.addAttribute("blog", blogService.getBlog(id));
 		return "/blogs/get-blog";
 	}
@@ -59,8 +66,9 @@ public class BlogController {
 			@RequestParam("filepath") MultipartFile file,
 			@RequestParam final String blogger,
 			@RequestParam final Timestamp regDateTime,
-			Model model) throws IllegalStateException, IOException {	
-
+			Model model, Locale locale) throws IllegalStateException, IOException {	
+		logger.info("CREATE BLOG POST! The client locale is {}.", locale);
+		
 		Blog blog = new Blog();
 		blog.setTitle(title);
 		blog.setContent(content);
@@ -87,7 +95,8 @@ public class BlogController {
 			@RequestParam("filepath") MultipartFile file,
 			@RequestParam final String blogger,
 			@RequestParam final Timestamp regDateTime,
-			Model model) throws IllegalStateException, IOException {
+			Model model, Locale locale) throws IllegalStateException, IOException {
+		logger.info("UPDATE BLOG POST! The client locale is {}.", locale);
 		
 		Blog blog = new Blog();
 		blog.setId(id);
@@ -99,6 +108,18 @@ public class BlogController {
 		
 		blogService.putBlog(blog);
 		return "redirect:/blogs/all";
+	}
+	
+	@GetMapping("/blogs/delete/{id}")
+	public String deleteBlog(@PathVariable("id") Long id,
+			Model model, Locale locale) {
+		logger.info("DELETE BLOG POST! The client locale is {}.", locale);
+		
+		int rows = blogService.deleteBlog(id);
+		
+		if (rows >= 1) return "redirect:/blogs/all";
+		
+		return "redirect:/blogs/error";
 	}
 	
 	
