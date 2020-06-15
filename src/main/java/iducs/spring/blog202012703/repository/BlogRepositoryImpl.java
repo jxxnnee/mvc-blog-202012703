@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,48 +27,60 @@ public class BlogRepositoryImpl implements BlogRepository {
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	
-	public BlogRepositoryImpl(SimpleDriverDataSource dataSource) {
-		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-	}
+	private SqlSession sqlSession;
 	
+	public BlogRepositoryImpl(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+
+	private static String namespace = "iducs.spring.blog202012703.mapper.blogMapper";
 	@Override
 	public int create(Blog blog) {
 		int rows = 0;
-		String sql = "INSERT INTO blog(title, content, filepath, blogger, reg_date_time)"
-				+ "VALUES(:title, :content, :filepath, :blogger, :regDateTime)";
-		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(blog);
-		rows = jdbcTemplate.update(sql, params);
+		
+		try {
+			rows = sqlSession.insert(namespace + ".create", blog);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return rows;	
 	}
 
 	@Override
 	public Blog read(Blog blog) {
-		String sql = "select * from blog where id = :id";
-		Map<String, Integer> params = Collections.singletonMap("id", (int) blog.getId());
-//		List<Blog> blogList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Blog>(Blog.class));
-		Blog alog = jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<Blog>(Blog.class));
-		System.out.println(alog.getFilepath());
+		Blog data = new Blog();
 		
-		return alog;
+		try {
+			data = sqlSession.selectOne(namespace + ".read", blog.getId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return data;
 	}
 
 	@Override
 	public List<Blog> readList() {
-		String sql = "select * from blog order by id desc";
-		List<Blog> blogList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Blog>(Blog.class));
+		List<Blog> data = new ArrayList<>();
 		
-		return blogList;
+		try {
+			data = sqlSession.selectList(namespace + ".readList");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return data;
 	}
 
 	@Override
 	public int update(Blog blog) {
 		int rows = 0;
 		try {
-			String sql = "update blog set title=:title, content=:content, filepath=:filepath, blogger=:blogger," 
-					+ "reg_date_time=:regDateTime where id=:id";
-			BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(blog);
-			rows = jdbcTemplate.update(sql, params);
+			rows = sqlSession.update(namespace + ".update", blog);
 		} catch (DataAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,11 +92,13 @@ public class BlogRepositoryImpl implements BlogRepository {
 	@Override
 	public int delete(Blog blog) {
 		int rows = 0;
-
-		String sql = "delete from blog where id=:id";
-		Map<String, Integer> params = Collections.singletonMap("id", (int) blog.getId());
 		
-		rows = jdbcTemplate.update(sql, params);
+		try {
+			rows = sqlSession.delete(namespace + ".delete", blog.getId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return rows;
 	}

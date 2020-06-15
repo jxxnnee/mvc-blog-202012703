@@ -2,9 +2,12 @@ package iducs.spring.blog202012703.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import iducs.spring.blog202012703.domain.Blog;
 import iducs.spring.blog202012703.repository.BlogRepository;
 
+@Service
 public class BlogServiceImpl implements BlogService {
 	private BlogRepository blogRepository;
 

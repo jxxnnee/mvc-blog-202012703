@@ -14,7 +14,10 @@
 
 
 <body>
-	<% request.setCharacterEncoding("utf-8"); %>
+	<% 
+		request.setCharacterEncoding("EUC-KR");
+		Object img = request.getAttribute("blog");
+	%>
   <!-- Navigation -->
   <%@ include file="../main/i-nav.jsp" %>
   
@@ -42,12 +45,11 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <h2 class="section-heading">${blog.title }</h2>       
-		  <c:url value="/files/${blog.filepath}" var="url"/>
+		  <c:set value="/files/${blog.filepath}" var="url"/>
 		  <p>${blog.content }</p>
-		  <img class="img-fluid" id="image" src="" alt="">
-		  <script>
-			document.getElementById("image").src="/files/${blog.filepath }";
-		  </script>
+		  <p><%=img %></p>
+		  <img class="img-fluid" id="image" src="/resources/files/<c:out value="${blog.filepath }" />" alt="">
+		  
           <span class="caption text-muted">To go places and do things that have never been done</span>
           <p> Written ${blog.regDateTime }</p>
           <p>Photographs by <a href="#">${blog.blogger }</a>.</p>
