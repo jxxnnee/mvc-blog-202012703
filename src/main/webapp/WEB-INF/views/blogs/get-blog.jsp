@@ -46,14 +46,13 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <h2 class="section-heading">${blog.title }</h2>       
 		  <c:set value="/files/${blog.filepath}" var="url"/>
-		  <p>${blog.content }</p>
 		  <p><%=img %></p>
 		  <img class="img-fluid" id="image" src="/resources/files/<c:out value="${blog.filepath }" />" alt="">
 		  
           <span class="caption text-muted">To go places and do things that have never been done</span>
           <p> Written ${blog.regDateTime }</p>
           <p>Photographs by <a href="#">${blog.blogger }</a>.</p>
-          <% if(name != null) { %>
+          <% if(blogger != null) { %>
           <div class="clearfix">
 	         <a class="btn btn-primary float-right" href="edit/${blog.id }">수정 &rarr;</a>
 	         

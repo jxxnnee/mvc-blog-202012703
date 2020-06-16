@@ -2,13 +2,12 @@
     pageEncoding="UTF-8"%>
     
     <% 
-    	Object name = session.getAttribute("name");
-    	Object id = session.getAttribute("id");
+    	Object blogger = session.getAttribute("blogger");
     %>
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-    	<% if(name != null) {%>
-      		<a class="navbar-brand" href="/bloggers/<%=id %>"><%=name %>'s Blogger</a>
+    	<% if(blogger != null) {%>
+      		<a class="navbar-brand" href="/bloggers/${sessionScope.blogger.id}">${sessionScope.blogger.uName}'s Blogger</a>
       	<% } else { %>
       		<a class="navbar-brand" href="/bloggers/login">Please Login</a>
       	<% } %>
@@ -18,7 +17,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          <% if(name != null) { %>
+          <% if(blogger != null) { %>
           <li class="nav-item">
             <a class="nav-link" href="/blogs/new">write blog</a>
           </li>
@@ -26,13 +25,13 @@
           <li class="nav-item">
             <a class="nav-link" href="/blogs/all">show blogs</a>
           </li>
-          <% if(name == null) { %>
+          <% if(blogger == null) { %>
           <li class="nav-item">
             <a class="nav-link" href="/bloggers/new">Sing In</a>
           </li>
           <% } %>
           <li class="nav-item">
-          	<% if(name == null) { %>
+          	<% if(blogger == null) { %>
             <a class="nav-link" href="/bloggers/login">Login</a>
             <% } else { %>
             <a class="nav-link" href="/bloggers/logout">Logout</a>

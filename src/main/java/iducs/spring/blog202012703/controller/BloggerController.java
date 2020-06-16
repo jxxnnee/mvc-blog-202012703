@@ -74,7 +74,7 @@ private static final Logger logger = LoggerFactory.getLogger(HomeController.clas
         return "/bloggers/edit-form";
     }
     
-    @GetMapping("/bloggers/delete") // 정보 확인과 수정을 구분하는 경우만 사용함
+    @GetMapping("/bloggers/delete") 
     public String deleteBlog(@RequestParam(name="id") long id, Model model) throws Exception {
     	Blogger blogger = bloggerService.getBlogger(id);
         model.addAttribute("blogger", blogger);
@@ -113,8 +113,7 @@ private static final Logger logger = LoggerFactory.getLogger(HomeController.clas
 			Model model) throws Exception {
 		Blogger blogger = bloggerService.getUserByuId(uId);
 		if(blogger != null && blogger.getuPw().equals(uPw)) {
-    		session.setAttribute("name", blogger.getuName());
-    		session.setAttribute("id", blogger.getId());
+    		session.setAttribute("blogger", blogger);
     		
     		System.out.println(session.getAttribute("uri").toString());
     		return "redirect:" + session.getAttribute("uri").toString();

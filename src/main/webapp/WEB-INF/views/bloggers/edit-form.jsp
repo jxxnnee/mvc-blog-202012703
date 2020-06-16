@@ -155,10 +155,10 @@
           </div>
           <div class="card-body">
             <h5 class="card-title text-center">Info</h5>
-            <form class="form-signin" action="./${blogger.id }" method="post" accept-charset="UTF-8">
+            <form class="form-signin" action="./${sessionScope.blogger.id }" method="post" accept-charset="UTF-8">
               <input type="hidden" name="_method" value="put"/>
               <div class="form-label-group">
-                <input type="text" name="uId" value="${blogger.uId }" id="inputUserame" class="form-control" placeholder="Id" required autofocus readonly>
+                <input type="text" name="uId" value="${sessionScope.blogger.uId }" id="inputUserame" class="form-control" placeholder="Id" required autofocus readonly>
                 <label for="inputUserame">Id</label>
               </div>
               <div class="form-label-group">
