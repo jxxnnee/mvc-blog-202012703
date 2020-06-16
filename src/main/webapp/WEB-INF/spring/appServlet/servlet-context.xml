@@ -37,7 +37,10 @@
 	</beans:bean>
 
 	<context:component-scan
-		base-package="iducs.spring.blog202012703" />
+		base-package="iducs.spring.blog202012703" use-default-filters="false">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
    
    
 </beans:beans>

@@ -5,23 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import iducs.spring.blog202012703.domain.Blog;
 
 public class BlogRepositoryImpl implements BlogRepository {
-	private NamedParameterJdbcTemplate jdbcTemplate;
-	
 	Connection conn = null;
 	Statement stmt = null;
 	PreparedStatement pstmt = null;

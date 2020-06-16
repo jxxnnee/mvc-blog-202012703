@@ -1,25 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    <% 
+    	Object name = session.getAttribute("name");
+    	Object id = session.getAttribute("id");
+    %>
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="index.jsp">Blog 1912000</a>
+    	<% if(name != null) {%>
+      		<a class="navbar-brand" href="/bloggers/<%=id %>"><%=name %>'s Blogger</a>
+      	<% } else { %>
+      		<a class="navbar-brand" href="/bloggers/login">Please Login</a>
+      	<% } %>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
+          <% if(name != null) { %>
           <li class="nav-item">
             <a class="nav-link" href="/blogs/new">write blog</a>
           </li>
+           <% } %>
           <li class="nav-item">
             <a class="nav-link" href="/blogs/all">show blogs</a>
           </li>
+          <% if(name == null) { %>
           <li class="nav-item">
-            <a class="nav-link" href="post.jsp">Sample Post</a>
+            <a class="nav-link" href="/bloggers/new">Sing In</a>
           </li>
+          <% } %>
           <li class="nav-item">
-            <a class="nav-link" href="contact.jsp">Contact</a>
+          	<% if(name == null) { %>
+            <a class="nav-link" href="/bloggers/login">Login</a>
+            <% } else { %>
+            <a class="nav-link" href="/bloggers/logout">Logout</a>
+            <% } %>
           </li>
           
           <li class="nav-item dropdown">

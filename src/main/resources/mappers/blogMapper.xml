@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 
 
 	<insert id="create">
-		insert into blog
+		insert into blog(title, content, filepath, blogger, reg_date_time)
 		values(#{title}, #{content}, #{filepath}, #{blogger}, #{regDateTime})
 	</insert>
 	
