@@ -36,6 +36,12 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-md-10 mx-auto">
+				<c:if test="${pagination.orderBy == 'DESC'}">
+				<a class="btn btn-primary float-right" href="../blogs/all?curPage=1&keyword=${pagination.keyword }&orderBy=ASC">작성일 &uarr;</a>
+				</c:if>
+				<c:if test="${pagination.orderBy == 'ASC'}">
+				<a class="btn btn-primary float-right" href="../blogs/all?curPage=1&keyword=${pagination.keyword }&orderBy=DESC">작성일순 &darr;</a>
+				</c:if>
 				<c:forEach items="${requestScope.blogList }" var="blog">
 					<div class="post-preview">
 						<a href="${blog.id }">
@@ -57,20 +63,20 @@
 								<ul class="pagination">
 									<c:if test="${pagination.prev}">
 									<li class="paginate_button page-item previous" id="dataTable_previous"> 
-									<a href="../blogs/all?curPage=${pagination.startPage - 1}&keyword=${pagination.keyword}" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Prev</a> 
+									<a href="../blogs/all?curPage=${pagination.startPage - 1}&keyword=${pagination.keyword}&orderBy=${pagination.orderBy }" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Prev</a> 
 									</li>
 									</c:if>
 									
 									<c:forEach var="i" begin="${pagination.startPage }" end="${pagination.endPage }">
 									<li class="paginate_button page-item
 									<c:if test="${pagination.curPage == i }"> active </c:if> ">
-									<a href="../blogs/all?curPage=${i}&keyword=${pagination.keyword}" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">${i} </a> 
+									<a href="../blogs/all?curPage=${i}&keyword=${pagination.keyword}&orderBy=${pagination.orderBy }" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">${i} </a> 
 									</li>
 									</c:forEach>
 									
 									<c:if test="${pagination.next}">
 									<li class="paginate_button page-item next" id="dataTable_next">
-									<a href="../blogs/all?curPage=${pagination.endPage + 1}&keyword=${pagination.keyword}" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">Next</a> 
+									<a href="../blogs/all?curPage=${pagination.endPage + 1}&keyword=${pagination.keyword}&orderBy=${pagination.orderBy }" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">Next</a> 
 									</li>
 									</c:if> 
 								</ul>

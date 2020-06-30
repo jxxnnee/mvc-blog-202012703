@@ -20,14 +20,15 @@ public class Pagination {
 	private String orderBy;
 	
 	public Pagination() {
-		this(1,3,3, "");// 한 페이지에 3개의 블로그, 한 화면에 3개의 페이지 번호 갯수
+		this(1,3,3, "", "DESC");// 한 페이지에 3개의 블로그, 한 화면에 3개의 페이지 번호 갯수
 	}
 	
-	public Pagination(int curPage, int perPage, int pageCount, String keyword) {
+	public Pagination(int curPage, int perPage, int pageCount, String keyword, String orderBy) {
 		this.curPage = curPage; 
 		this.perPage = perPage; 
 		this.pageCount = pageCount;
 		this.keyword = keyword;
+		this.orderBy = orderBy;
 	}
 	
 	public int getCurPage() {

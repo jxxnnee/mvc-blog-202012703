@@ -44,10 +44,12 @@ public class BlogController {
 		String order = orderBy != null ? orderBy : "DESC";
 		String word = keyword != null ? keyword : "";
 		int page = curPage != null ? curPage : 1;
-		Pagination pagination = new Pagination(page, 3, 3, word);
+		int perPage = 3;
+		int pageCount = 3;
+		Pagination pagination = new Pagination(page, perPage, pageCount, word, order);
 		
 		
-		if (word != "" && word != null) {
+		if (word != "" && word != null) { 
 			
 			try {
 				pagination.setTotalRowCount(blogService.getTotalRowCountByKeyword(word));
