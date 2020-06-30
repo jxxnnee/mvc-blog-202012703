@@ -50,13 +50,37 @@
 				</c:forEach>
 				<!-- Pager -->
 				<div class="clearfix">
-						<a class="btn btn-primary float-right" href="#">Older Posts
-						&rarr;</a>
+						<div class="row">
+						<div class="col-sm-12 col-md-4">Total : ${pagination.totalRowCount } blogs</div> 
+						<div class="col-sm-12 col-md-6">
+							<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate"> 
+								<ul class="pagination">
+									<c:if test="${pagination.prev}">
+									<li class="paginate_button page-item previous" id="dataTable_previous"> 
+									<a href="../blogs/all?curPage=${pagination.startPage - 1}" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Prev</a> 
+									</li>
+									</c:if>
+									
+									<c:forEach var="i" begin="${pagination.startPage }" end="${pagination.endPage }">
+									<li class="paginate_button page-item
+									<c:if test="${pagination.curPage == i }"> active </c:if> ">
+									<a href="../blogs/all?curPage=${i}" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">${i} </a> 
+									</li>
+									</c:forEach>
+									
+									<c:if test="${pagination.next}">
+									<li class="paginate_button page-item next" id="dataTable_next">
+									<a href="../blogs/all?curPage=${pagination.endPage + 1}" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">Next</a> 
+									</li>
+									</c:if> 
+								</ul>
+							</div> 
+						</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
 	<hr>
 
 	<!-- Footer -->

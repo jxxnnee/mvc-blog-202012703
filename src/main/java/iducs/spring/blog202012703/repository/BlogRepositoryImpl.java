@@ -11,6 +11,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.dao.DataAccessException;
 
 import iducs.spring.blog202012703.domain.Blog;
+import iducs.spring.blog202012703.utils.Pagination;
 
 public class BlogRepositoryImpl implements BlogRepository {
 	Connection conn = null;
@@ -54,11 +55,18 @@ public class BlogRepositoryImpl implements BlogRepository {
 	}
 
 	@Override
-	public List<Blog> readList() {
+	public List<Blog> readList(Pagination pagination) {
+		System.out.println("PAGINATION: "+ pagination);
 		List<Blog> data = new ArrayList<>();
-		
 		try {
-			data = sqlSession.selectList(namespace + ".readList");
+			if (pagination.getKeyword() != "" && pagination.getKeyword() != null) {
+				System.out.println("Keyword: " + pagination.getKeyword());
+				data = sqlSession.selectList(namespace + ".searchList", pagination);
+			}
+			else  {
+				System.out.println("Dont have Keyword" );
+				data = sqlSession.selectList(namespace + ".readList", pagination);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -92,5 +100,17 @@ public class BlogRepositoryImpl implements BlogRepository {
 		}
 
 		return rows;
+	}
+
+	@Override
+	public int readTotalRowCount() {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(namespace + ".readTotalRowCount");
+	}
+
+	@Override
+	public int readTotalRowCountByKeyword(String keyword) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(namespace + ".readTotalRowCountByKeyword", keyword);
 	}
 }

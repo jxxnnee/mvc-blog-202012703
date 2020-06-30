@@ -14,10 +14,6 @@
 
 
 <body>
-	<% 
-		request.setCharacterEncoding("EUC-KR");
-		Object img = request.getAttribute("blog");
-	%>
   <!-- Navigation -->
   <%@ include file="../main/i-nav.jsp" %>
   
@@ -44,9 +40,8 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <h2 class="section-heading">${blog.title }</h2>       
-		  <c:set value="/files/${blog.filepath}" var="url"/>
-		  <p><%=img %></p>
+          <h2 class="section-heading">${blog.title }</h2>
+          <p> ${blog.content }</p>
 		  <img class="img-fluid" id="image" src="/resources/files/<c:out value="${blog.filepath }" />" alt="">
 		  
           <span class="caption text-muted">To go places and do things that have never been done</span>

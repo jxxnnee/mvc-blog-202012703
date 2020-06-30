@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import iducs.spring.blog202012703.domain.Blog;
 import iducs.spring.blog202012703.repository.BlogRepository;
+import iducs.spring.blog202012703.utils.Pagination;
 
 @Service
 public class BlogServiceImpl implements BlogService {
@@ -24,9 +25,9 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public List<Blog> getBlogs() {
+	public List<Blog> getBlogs(Pagination pagination) {
 		// TODO Auto-generated method stub
-		return blogRepository.readList();
+		return blogRepository.readList(pagination);
 	}
 
 	@Override
@@ -69,5 +70,17 @@ public class BlogServiceImpl implements BlogService {
 		int rows = blogRepository.delete(blog);
 		
 		return rows;
+	}
+
+	@Override
+	public int getTotalRowCount() {
+		// TODO Auto-generated method stub
+		return blogRepository.readTotalRowCount();
+	}
+
+	@Override
+	public int getTotalRowCountByKeyword(String keyword) {
+		// TODO Auto-generated method stub
+		return blogRepository.readTotalRowCountByKeyword(keyword);
 	}
 }

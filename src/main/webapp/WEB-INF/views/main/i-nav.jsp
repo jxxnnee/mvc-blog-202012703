@@ -23,8 +23,19 @@
           </li>
            <% } %>
           <li class="nav-item">
-            <a class="nav-link" href="/blogs/all">show blogs</a>
+            <a class="nav-link" href="/blogs/all?curPage=1">show blogs</a>
           </li>
+          <form class="form-inline ml-3" action="/blogs/all" method="get"> 
+          <div class="input-group input-group-sm">
+			<input id="curPage" type="hidden" name="curPage" value=1>
+			<input class="form-control form-control-navbar" type="search" name="keyword" placeholder="Search" aria-label="Search">
+			<div class="input-group-append">
+			<button class="btn btn-navbar" type="submit">
+				<i class="fas fa-search"></i> 
+			</button>
+			</div>
+		  </div>
+		  </form>
           <% if(blogger == null) { %>
           <li class="nav-item">
             <a class="nav-link" href="/bloggers/new">Sing In</a>

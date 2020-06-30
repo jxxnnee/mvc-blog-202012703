@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import iducs.spring.blog202012703.HomeController;
 import iducs.spring.blog202012703.domain.Blog;
 import iducs.spring.blog202012703.service.BlogService;
+import iducs.spring.blog202012703.utils.Pagination;
 
 @Controller
 public class BlogController {
@@ -34,11 +35,34 @@ public class BlogController {
 	}
 	
 	@GetMapping("/blogs/all")
-	public String getBlogs(Model model, Locale locale) {
-		logger.info("GET BLOG LIST! The client locale is {}.", locale);
-		List<Blog> blogList = blogService.getBlogs();
-		model.addAttribute("blogList", blogList);
-		return "/blogs/get-blogs";
+	public String getBlogs(@RequestParam(value="curPage", required=false) Integer curPage, 
+						@RequestParam(value="keyword", required=false) String keyword, 
+						Model model, Locale locale) {
+		String word = keyword != null ? keyword : "";
+		int page = curPage != null ? curPage : 1;
+		Pagination pagination = new Pagination(page, 3, 3, word);
+		
+		
+		if (word != "" && word != null) {
+			System.out.println("keyword: " + keyword);
+			pagination.setTotalRowCount(blogService.getTotalRowCountByKeyword(word));
+			logger.info("GET BLOG SEARCH LIST! The client locale is {}.", locale);
+			List<Blog> blogList = blogService.getBlogs(pagination);
+			model.addAttribute("blogList", blogList);
+			model.addAttribute("pagination", pagination);
+			
+			return "/blogs/get-search-blogs";
+		} else {
+			
+			System.out.println("DONT HAVE KEYWORD!!!!!");
+			pagination.setTotalRowCount(blogService.getTotalRowCount());
+			logger.info("GET BLOG LIST! The client locale is {}.", locale);
+			List<Blog> blogList = blogService.getBlogs(pagination);
+			model.addAttribute("blogList", blogList);
+			model.addAttribute("pagination", pagination);
+			
+			return "/blogs/get-blogs";
+		}
 	}
 
 	@GetMapping("/blogs/{id}")
