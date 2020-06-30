@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import iducs.spring.blog202012703.HomeController;
 import iducs.spring.blog202012703.domain.Blogger;
 import iducs.spring.blog202012703.service.BloggerService;
+import iducs.spring.blog202012703.utils.CommonExceptionAdvice;
 
 @Controller
 public class BloggerController {
 private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	private BloggerService bloggerService;
+	private CommonExceptionAdvice commonException;
 	public BloggerController(BloggerService bloggerService) {
 		this.bloggerService = bloggerService;
 	}
@@ -38,17 +40,27 @@ private static final Logger logger = LoggerFactory.getLogger(HomeController.clas
 	@GetMapping("/bloggers/all")
 	public String getBlogs(Model model, Locale locale) {
 		logger.info("GET BLOGGER LIST! The client locale is {}.", locale);
-		List<Blogger> blogList = bloggerService.getBloggers();
-		model.addAttribute("blogList", blogList);
-		return "/bloggers/get-bloggers";
+		try {
+			List<Blogger> blogList = bloggerService.getBloggers();
+			model.addAttribute("blogList", blogList);
+			return "/bloggers/get-bloggers";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
 	}
 
 	@GetMapping("/bloggers/{id}")
 	public String getBlog(@PathVariable("id") Long id,
 			Model model, Locale locale) {
 		logger.info("GET BLOGGER INFO! The client locale is {}.", locale);
-		model.addAttribute("blogger", bloggerService.getBlogger(id));
-		return "/bloggers/info-form";
+		try {
+			model.addAttribute("blogger", bloggerService.getBlogger(id));
+			return "/bloggers/info-form";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
 	}
 	
 	@GetMapping("/bloggers/new")
@@ -69,16 +81,29 @@ private static final Logger logger = LoggerFactory.getLogger(HomeController.clas
     
     @GetMapping("/bloggers/edit") // 정보 확인과 수정을 구분하는 경우만 사용함
     public String editBlog(@RequestParam(name="id") long id, Model model) throws Exception {
-    	Blogger blogger = bloggerService.getBlogger(id);
-        model.addAttribute("blogger", blogger);
-        return "/bloggers/edit-form";
+    	Blogger blogger;
+		try {
+			blogger = bloggerService.getBlogger(id);
+	        model.addAttribute("blogger", blogger);
+	        
+
+	        return "/bloggers/edit-form";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
     }
     
     @GetMapping("/bloggers/delete") 
     public String deleteBlog(@RequestParam(name="id") long id, Model model) throws Exception {
-    	Blogger blogger = bloggerService.getBlogger(id);
-        model.addAttribute("blogger", blogger);
-        return "/bloggers/delete-form";
+    	try {
+			Blogger blogger = bloggerService.getBlogger(id);
+			model.addAttribute("blogger", blogger);
+			return "/bloggers/delete-form";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
     }
 	
 	
@@ -100,8 +125,13 @@ private static final Logger logger = LoggerFactory.getLogger(HomeController.clas
 		data.setuName(uName);
 		data.setuEmail(uEmail);
 		
-		bloggerService.postBlogger(data);
-		return "redirect:" + "/";
+		try {
+			bloggerService.postBlogger(data);
+			return "redirect:" + "/";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
 	}
 	
 	@PostMapping("/bloggers/login")
@@ -111,16 +141,20 @@ private static final Logger logger = LoggerFactory.getLogger(HomeController.clas
 			HttpSession session,
 			HttpServletRequest request,
 			Model model) throws Exception {
-		Blogger blogger = bloggerService.getUserByuId(uId);
-		if(blogger != null && blogger.getuPw().equals(uPw)) {
-    		session.setAttribute("blogger", blogger);
-    		
-    		System.out.println(session.getAttribute("uri").toString());
-    		return "redirect:" + session.getAttribute("uri").toString();
-    	}
-    	else {
-    		return "redirect:/bloggers/error";
-    	}	
+		try {
+			Blogger blogger = bloggerService.getUserByuId(uId);
+			if(blogger != null && blogger.getuPw().equals(uPw)) {
+				session.setAttribute("blogger", blogger);
+				
+				return "redirect:" + session.getAttribute("uri").toString();
+			}
+			else {
+				return "redirect:/bloggers/error";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}	
 	}
 	
 	@PutMapping("/bloggers/{id}") 
@@ -139,23 +173,33 @@ private static final Logger logger = LoggerFactory.getLogger(HomeController.clas
 		data.setuName(uName);
 		data.setuEmail(uEmail);
     	
-		int rows = bloggerService.updateBlogger(data);
-		if (rows > 0 ) {
-			return "redirect:/bloggers/" + id;
-		} else {
-			return "redirect:/bloggers/error";
+		try {
+			int rows = bloggerService.updateBlogger(data);
+			if (rows > 0 ) {
+				return "redirect:/bloggers/" + id;
+			} else {
+				return "redirect:/bloggers/error";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
 		}
 	}
 	
 	@DeleteMapping("/bloggers/{id}")
     public String deleteBlog(@PathVariable long id, HttpSession session, Model model) throws Exception {
-    	int count = bloggerService.deleteBlogger(id);
-    	if(count > 0) {
-    		session.invalidate();
-    		return "redirect:/";
-    	}
-    	else     		
-    		return "redirect:/bloggers/error";
+    	try {
+			int count = bloggerService.deleteBlogger(id);
+			if(count > 0) {
+				session.invalidate();
+				return "redirect:/";
+			}
+			else     		
+				return "redirect:/bloggers/error";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
     } 
 	
 	

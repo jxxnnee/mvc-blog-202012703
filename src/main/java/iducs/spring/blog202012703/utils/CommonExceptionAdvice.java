@@ -15,6 +15,6 @@ public class CommonExceptionAdvice {
 		logger.info("@ControllerAdvice 방식 \n###exception: " + e.getMessage());
 		model.addAttribute("exception", e);
 		
-		return "/main/error";
+		return "redirect:/bloggers/error";
 	}
 }

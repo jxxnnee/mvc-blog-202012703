@@ -40,7 +40,16 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 			) as B
 		) as A
 		where rnum between #{startRow} and #{endRow}
+		order by reg_date_time
 		]]>
+		<choose>
+			<when test="orderBy == 'DESC'">
+				DESC
+			</when>
+			<when test="orderBy == 'ASC'">
+				ASC
+			</when>
+		</choose>
 	</select>
 	
 	<select id="searchList" resultType="iducs.spring.blog202012703.domain.Blog">
@@ -56,7 +65,16 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 			) as B
 		) as A
 		where rnum between #{startRow} and #{endRow}
+		order by reg_date_time
 		]]>
+		<choose>
+			<when test="orderBy == 'DESC'">
+				DESC
+			</when>
+			<when test="orderBy == 'ASC'">
+				ASC
+			</when>
+		</choose>
 	</select>
 	
 	<update id="update">

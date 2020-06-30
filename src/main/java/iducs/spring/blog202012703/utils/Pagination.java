@@ -17,6 +17,7 @@ public class Pagination {
 	private int endRow; // 페이지의 마지막 행
 	
 	private String keyword;
+	private String orderBy;
 	
 	public Pagination() {
 		this(1,3,3, "");// 한 페이지에 3개의 블로그, 한 화면에 3개의 페이지 번호 갯수
@@ -133,6 +134,14 @@ public class Pagination {
 
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
+	}
+
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
 	}
 
 	private void calcPageVariables() {

@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import iducs.spring.blog202012703.HomeController;
 import iducs.spring.blog202012703.domain.Blog;
 import iducs.spring.blog202012703.service.BlogService;
+import iducs.spring.blog202012703.utils.CommonExceptionAdvice;
 import iducs.spring.blog202012703.utils.Pagination;
 
 @Controller
@@ -30,38 +31,50 @@ public class BlogController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	private BlogService blogService;
+	private CommonExceptionAdvice commonException;
 	public BlogController(BlogService blogService) {
 		this.blogService = blogService;
 	}
 	
 	@GetMapping("/blogs/all")
 	public String getBlogs(@RequestParam(value="curPage", required=false) Integer curPage, 
-						@RequestParam(value="keyword", required=false) String keyword, 
+						@RequestParam(value="keyword", required=false) String keyword,
+						@RequestParam(value="orderBy", required=false) String orderBy,
 						Model model, Locale locale) {
+		String order = orderBy != null ? orderBy : "DESC";
 		String word = keyword != null ? keyword : "";
 		int page = curPage != null ? curPage : 1;
 		Pagination pagination = new Pagination(page, 3, 3, word);
 		
 		
 		if (word != "" && word != null) {
-			System.out.println("keyword: " + keyword);
-			pagination.setTotalRowCount(blogService.getTotalRowCountByKeyword(word));
-			logger.info("GET BLOG SEARCH LIST! The client locale is {}.", locale);
-			List<Blog> blogList = blogService.getBlogs(pagination);
-			model.addAttribute("blogList", blogList);
-			model.addAttribute("pagination", pagination);
 			
-			return "/blogs/get-search-blogs";
+			try {
+				pagination.setTotalRowCount(blogService.getTotalRowCountByKeyword(word));
+				logger.info("GET BLOG SEARCH LIST! The client locale is {}.", locale);
+				List<Blog> blogList = blogService.getBlogs(pagination);
+				model.addAttribute("blogList", blogList);
+				model.addAttribute("pagination", pagination);
+				
+				return "/blogs/get-search-blogs";
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				return commonException.errorException(model, e);
+			}
 		} else {
 			
-			System.out.println("DONT HAVE KEYWORD!!!!!");
-			pagination.setTotalRowCount(blogService.getTotalRowCount());
-			logger.info("GET BLOG LIST! The client locale is {}.", locale);
-			List<Blog> blogList = blogService.getBlogs(pagination);
-			model.addAttribute("blogList", blogList);
-			model.addAttribute("pagination", pagination);
-			
-			return "/blogs/get-blogs";
+			try {
+				pagination.setTotalRowCount(blogService.getTotalRowCount());
+				logger.info("GET BLOG LIST! The client locale is {}.", locale);
+				List<Blog> blogList = blogService.getBlogs(pagination);
+				model.addAttribute("blogList", blogList);
+				model.addAttribute("pagination", pagination);
+				
+				return "/blogs/get-blogs";
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				return commonException.errorException(model, e);
+			}
 		}
 	}
 
@@ -69,8 +82,13 @@ public class BlogController {
 	public String getBlog(@PathVariable("id") Long id,
 			Model model, Locale locale) {
 		logger.info("GET BLOG INFO! The client locale is {}.", locale);
-		model.addAttribute("blog", blogService.getBlog(id));
-		return "/blogs/get-blog";
+		try {
+			model.addAttribute("blog", blogService.getBlog(id));
+			return "/blogs/get-blog";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
 	}
 	
 	@GetMapping("/blogs/new")
@@ -96,15 +114,25 @@ public class BlogController {
 		blog.setRegDateTime(regDateTime);	
 		blog = saveImage(blog, file);
 		
-		blogService.postBlog(blog);
-		return "redirect:/blogs/all";
+		try {
+			blogService.postBlog(blog);
+			return "redirect:/blogs/all";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
 	}
 	
 	@GetMapping("/blogs/edit/{id}")
 	public String editBlog(@PathVariable("id") Long id,
 			Model model) {
-		model.addAttribute("blog", blogService.getBlog(id));
-		return "/blogs/update-blog";
+		try {
+			model.addAttribute("blog", blogService.getBlog(id));
+			return "/blogs/update-blog";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
 	}
 	
 	@PostMapping("/blogs/{id}")
@@ -126,8 +154,13 @@ public class BlogController {
 		blog.setRegDateTime(regDateTime);
 		blog = saveImage(blog, file);
 		
-		blogService.putBlog(blog);
-		return "redirect:/blogs/all";
+		try {
+			blogService.putBlog(blog);
+			return "redirect:/blogs/all";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
 	}
 	
 	@GetMapping("/blogs/delete/{id}")
@@ -135,9 +168,14 @@ public class BlogController {
 			Model model, Locale locale) {
 		logger.info("DELETE BLOG POST! The client locale is {}.", locale);
 		
-		int rows = blogService.deleteBlog(id);
-		
-		if (rows >= 1) return "redirect:/blogs/all";
+		try {
+			int rows = blogService.deleteBlog(id);
+			
+			if (rows >= 1) return "redirect:/blogs/all";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return commonException.errorException(model, e);
+		}
 		
 		return "redirect:/blogs/error";
 	}
